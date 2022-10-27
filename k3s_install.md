@@ -161,10 +161,11 @@ kubectl apply -f hello-world-ingress.yaml
 
 You should now be able to access the container's API or UI via `http://<IP or Hostname>/testpath` in the web browser.
 
-Note:
-- Both the niginx hello-world project and the ASP.NET WeatherStation project use HTTP, not HTTPS!
+Notes:
+- Both the niginx hello-world project and the ASP.NET WeatherStation project use `HTTP`, **not** `HTTPS`!
+- The ingress configuration specifies a URL rewrite annotation.  This takes URLs at `/testpath` and rewrites them to `/` since many containers are configured to use the base path as stand-alone applications.  If more than one application tries to use `/`, they'll conflict.  So this allows you to route multiple applications at different URL paths to individual containers that all expect to be accessed at `/`.
 
-# Helm Charts
+# Helm Charts *(Bonus, because you're awesome)*
 Deploying an application to kubernetes may involve multiple pieces:
 - The service
 - The ingress config to route network traffic to your app
@@ -177,12 +178,22 @@ To nicely wrap all of the pieces together, we use a [Helm](https://helm.sh/) cha
 
 SystemLink provides a [starter helm chart](https://dev.azure.com/ni/DevCentral/_git/Skyline?path=/HelmStarterScaffold) that you can use to create one of your own.
 
+Try creating a helm chart and using it to deploy your application to k3s instead.  The helm templates are ***very*** similar to the raw kubernetes manifest files.
+
 # Troubleshooting
 
-- Switching to the nginx ingress controller does not adopt any existing ingress configurations.  If you deployed an ingress config before switching from traefik to nginx, you'll need to delete and redeploy the ingress configurations.
+- **I deployed switched from traefik to the nginx ingress controller after deploying an ingress configuration.  Network traffic isn't reaching my container.**
 
-- My container doesn't start after deploying to k3s.  What could be wrong?
+  Switching to the nginx ingress controller does not adopt any existing ingress configurations.  If you deployed an ingress config before switching from traefik to nginx, you'll need to delete and redeploy the ingress configurations.
+
+- **My container doesn't start after deploying to k3s.  What could be wrong?**
   
   Run `kubectl describe pod <pod-name>` and check these common issues:
   - ImagePullBackoff - The kubernetes cluster can't find your docker container image on dockerhub, or doesn't have access to it.
   - CrashLoopBackoff - The container started, but exited.  Containers are expected to run forever unless there's an issue that causes it to exit.  Many times, you haven't specified a command that keeps the container from exiting.  Check the command in the [hello-world-deployment.yaml](hello-world/k3s-manifests/hello-world-deployment.yaml)
+
+- **I updated my container image and redeployed to k3s, but I don't see any changes.  What gives?**
+
+  Kubernetes keeps a local cache of images.  If the container name or version hasn't changed, Kubernetes will use the cache instead.  The ImagePullPolicy:Always in the deployment manifest ensures that it will pull the container every time, even if nothing has changed.  Best-practice:  Version your containers and don't rely on the `latest` tag.  To work-around this, delete the k3s deployment and re-deploy it.  ie:  `kubectl delete deployment hello-world` and `kubectl apply -f hello-world-deployment.yaml` again.
+  
+  Another thing to check is that you remembered to push your updated container to dockerhub.
