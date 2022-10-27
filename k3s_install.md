@@ -22,7 +22,7 @@ Notes:
 - We're opting-out of the traefik ingress controller, which is the default in k3s.
 - k3s default configuration is to install the kubernetes master and worker on the same node.  This helps for simple configurations, but in larger-scale deployments you'd typically have multiple worker nodes on different machines which form a cluster.
 
-Create a `values/ingress-nginx.yaml` configuration file with the following content:
+Create a [values/ingress-nginx.yaml](hello-world/k3s-manifests/values/ingress-nginx.yaml) configuration file with the following content:
 ```
 ---
 controller:
@@ -76,11 +76,13 @@ ex:
 docker push msvaterlaus/hello-world:latest
 ```
 
-
 # Deploy a container to k3s
-Test deploying a `hello-world` docker container hosted on dockerhub to the k3s cluster:
+Test deploying the `hello-world` docker container hosted on dockerhub to the k3s cluster:
 
-Create a `hello-world-deployment.yaml` manifest file with the following content (and replace `<dockerhub-username>` in the file):
+Notes:
+- You can deploy the hello-world docker container as a first test that everything is working.  Afterward, you can also deploy the Weathe Station microservice too, following the same steps:  Tag and push your docker container, then create additional manifests similar to the ones below and modify them for the new application being deployed.
+
+Create a [hello-world-deployment.yaml](hello-world/k3s-manifests/hello-world-deployment.yaml) manifest file with the following content (and replace `<dockerhub-username>` in the file):
 ```
 apiVersion: apps/v1
 kind: Deployment
@@ -130,7 +132,7 @@ kubectl logs <pod-name>
 # Deploy an ingress configuration
 In order to route network traffic to your container, you need to tell the ingress controller what URLs should be routed to that container.
 
-Create a `hello-world-ingress.yaml` manifest file with the following content:
+Create a [hello-world-ingress.yaml](hello-world/k3s-manifests/hello-world-ingress.yaml) manifest file with the following content:
 ```
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -157,7 +159,10 @@ Deploy the container via kubectl:
 kubectl apply -f hello-world-ingress.yaml
 ```
 
-You should now be able to access the container's API or UI via `<IP or Hostname>/testpath` in the web browser.
+You should now be able to access the container's API or UI via `http://<IP or Hostname>/testpath` in the web browser.
+
+Note:
+- Both the niginx hello-world project and the ASP.NET WeatherStation project use HTTP, not HTTPS!
 
 # Helm Charts
 Deploying an application to kubernetes may involve multiple pieces:
