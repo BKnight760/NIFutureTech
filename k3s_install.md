@@ -1,7 +1,11 @@
 # Prepare
 For this part, you'll need a sandbox or VM running Linux where you can install k3s.
 
-You may have [Azure](https://portal.azure.com/#home) credits included with your MSDN account that you can create a Linux VM.
+A VMware Workstation or VirtualBox image will work fine.  If you have access to a Cloud-hosted VM on AWS, Azure, or Google Cloud, that should work too.
+
+K3s has some [minimum system requirements](https://docs.k3s.io/installation/requirements#hardware).  For this demo with only one small container the minimums are plenty.
+- at least 512 MB RAM, although a Gigabyte or more is preferred
+- at least 1 CPU core
 
 Ensure that you can SSH to the Linux machine, or that you have access to the terminal.
 
@@ -167,3 +171,13 @@ Deploying an application to kubernetes may involve multiple pieces:
 To nicely wrap all of the pieces together, we use a [Helm](https://helm.sh/) chart.  This isn't required, but could simplify more complicated deployments.
 
 SystemLink provides a [starter helm chart](https://dev.azure.com/ni/DevCentral/_git/Skyline?path=/HelmStarterScaffold) that you can use to create one of your own.
+
+# Troubleshooting
+
+- Switching to the nginx ingress controller does not adopt any existing ingress configurations.  If you deployed an ingress config before switching from traefik to nginx, you'll need to delete and redeploy the ingress configurations.
+
+- My container doesn't start after deploying to k3s.  What could be wrong?
+  
+  Run `kubectl describe pod <pod-name>` and check these common issues:
+  - ImagePullBackoff - The kubernetes cluster can't find your docker container image on dockerhub, or doesn't have access to it.
+  - CrashLoopBackoff - The container started, but exited.  Containers are expected to run forever unless there's an issue that causes it to exit.  Many times, you haven't specified a command that keeps the container from exiting.  Check the command in the [hello-world-deployment.yaml](hello-world/k3s-manifests/hello-world-deployment.yaml)
