@@ -201,6 +201,6 @@ Try creating a helm chart and using it to deploy your application to k3s instead
 
 - **I updated my container image and redeployed to k3s, but I don't see any changes.  What gives?**
 
-  Kubernetes keeps a local cache of images.  If the container name or version hasn't changed, Kubernetes will use the cache instead.  The ImagePullPolicy:Always in the deployment manifest ensures that it will pull the container every time, even if nothing has changed.  Best-practice:  Version your containers and don't rely on the `latest` tag.  To work-around this, delete the k3s deployment and re-deploy it.  ie:  `kubectl delete deployment hello-world` and `kubectl apply -f hello-world-deployment.yaml` again.
+  Kubernetes keeps a local cache of images.  If the container name or version hasn't changed, Kubernetes will use the cache instead.  The `ImagePullPolicy:Always` in the deployment manifest ensures that it will pull the container every time, even if nothing has changed.  Best-practice:  Version your containers and don't rely on the `latest` tag.  To work-around this, delete the k3s deployment and re-deploy it.  ie:  `kubectl delete deployment hello-world` and `kubectl apply -f hello-world-deployment.yaml` again.
   
   Another thing to check is that you remembered to push your updated container to dockerhub.
