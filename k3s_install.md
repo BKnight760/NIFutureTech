@@ -183,6 +183,11 @@ You can create a starter helm chart by using the instructions on the [wiki](http
 Try creating a helm chart and using it to deploy your application to k3s instead.  The helm templates are ***very*** similar to the raw kubernetes manifest files.
 
 # Troubleshooting
+- **My container is running under docker, but I cannot access the UI or API via the web browser.**
+
+  Ensure you started the docker container with the -p (port) option.  Typically you can map your container to port 8080 to avoid conflicts with port 80.
+
+  Most browsers will default to HTTPS.  Since we're running only HTTP here, you may actually need to prefix your URL with `http://` explicitly.  ie:  `http://localhost:8080`
 
 - **I switched from traefik to the nginx ingress controller after deploying an ingress configuration.  Network traffic isn't reaching my container.**
 
