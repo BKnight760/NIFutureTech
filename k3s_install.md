@@ -184,7 +184,7 @@ Try creating a helm chart and using it to deploy your application to k3s instead
 
 # Troubleshooting
 
-- **I deployed switched from traefik to the nginx ingress controller after deploying an ingress configuration.  Network traffic isn't reaching my container.**
+- **I switched from traefik to the nginx ingress controller after deploying an ingress configuration.  Network traffic isn't reaching my container.**
 
   Switching to the nginx ingress controller does not adopt any existing ingress configurations.  If you deployed an ingress config before switching from traefik to nginx, you'll need to delete and redeploy the ingress configurations.
 
