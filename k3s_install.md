@@ -69,7 +69,7 @@ docker tag hello-world:latest msvaterlaus/hello-world:latest
 
 Push your docker container to dockerhub:
 ```
-docker push <dockerup-username>/<container-name>:<version>
+docker push <dockerhub-username>/<container-name>:<version>
 ```
 ex:
 ```
