@@ -178,6 +178,8 @@ To nicely wrap all of the pieces together, we use a [Helm](https://helm.sh/) cha
 
 SystemLink provides a [starter helm chart](https://dev.azure.com/ni/DevCentral/_git/Skyline?path=/HelmStarterScaffold) that you can use to create one of your own.
 
+You can create a starter helm chart by using the instructions on the [wiki](https://dev.azure.com/ni/DevCentral/_git/Skyline?path=/docs/staging/Helm-deployment-of-SystemLink.md&_a=preview&anchor=creating-a-helm-chart-for-a-systemlink-component), `under the "Creating a helm chart for a SystemLink component section`.
+
 Try creating a helm chart and using it to deploy your application to k3s instead.  The helm templates are ***very*** similar to the raw kubernetes manifest files.
 
 # Troubleshooting
