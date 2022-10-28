@@ -31,7 +31,7 @@ controller:
 ...
 ```
 
-Run the following command to install the nginx incress controller:
+Run the following command to install the nginx ingress controller:
 ```
 helm upgrade --install \
     --namespace ingress-nginx --create-namespace \
